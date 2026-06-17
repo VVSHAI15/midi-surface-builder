@@ -1,0 +1,60 @@
+body {
+  background-color: #222;
+  color: white;
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column; /* Fixed typo here */
+  align-items: center;
+  padding: 50px;
+  touch-action: none;
+  height: 100vh;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+#mode-toggle-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  background-color: #444;
+  color: white;
+  border: 1px solid #666;
+  border-radius: 6px;
+}
+
+#status {
+  margin-bottom: 20px;
+  color: #aaa;
+}
+
+.pad-container {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
+  width: 100%;
+  flex-grow: 1; /* Allows container to fill remaining space */
+  border: 1px dashed #444; /* Gives you a visual bound of your canvas */
+  padding: 20px;
+  border-radius: 12px;
+  position: relative;
+}
+
+.midi-pad {
+  width: 150px;
+  height: 150px;
+  background-color: #444;
+  border: 2px solid #666;
+  border-radius: 12px;
+  font-size: 18px;
+  color: white;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none; /* Crucial for interact.js on mobile */
+  /* Absolute positioning is better for drag/drop, but transform works fine here */
+}
+
+/* Flashes green when pressed, but ONLY if not in edit mode */
+body:not(.edit-mode) .midi-pad:active {
+  background-color: #4caf50; 
+}

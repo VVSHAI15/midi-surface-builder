@@ -1,13 +1,20 @@
 {
-  "name": "midi-surface",
+  "name": "midi-surface-builder",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
+    "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "dependencies": {
+    "easymidi": "^3.2.0",
+    "ws": "^8.21.0"
+  },
+  "devDependencies": {
+    "electron": "^42.4.1"
+  }
 }
