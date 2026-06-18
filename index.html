@@ -14,15 +14,30 @@
     <button id="mode-toggle-btn">Enter Edit Mode</button>
     <div id="status">Connecting to bridge...</div>
 
-    <div class="pad-container">
-      <button class="midi-pad" data-cc="14">
-        Pad 1<br />(CC 14)
-      </button>
-      <button class="midi-pad" data-cc="15">
-        Pad 2<br />(CC 15)
-      </button>
+    <div id="toolbar">
+      <button id="add-pad-btn">+ Add Pad</button>
+      <button id="add-fader-btn">+ Add Fader</button>
+      <button id="clear-btn" style="background-color: #7b2020;">Clear All</button>
     </div>
 
-    <script src="app.js"></script>
+    <div class="pad-container" id="canvas"></div>
+
+    <div id="property-inspector">
+      <h3>Properties</h3>
+      
+      <label>Label Text:
+        <input type="text" id="prop-text" placeholder="e.g. Swells">
+      </label>
+      
+      <label>Color:
+        <input type="color" id="prop-color">
+      </label>
+      
+      <label>MIDI CC:
+        <input type="number" id="prop-cc" min="0" max="127">
+      </label>
+    </div>
+
+    <script src="app.js" defer></script>
   </body>
 </html>

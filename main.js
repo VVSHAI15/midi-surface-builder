@@ -34,11 +34,13 @@ wss.on('connection', function connection(ws) {
 });
 // 3. Fixed HTTP Web Server to properly serve HTML, CSS, and JS files
 const webServer = http.createServer((req, res) => {
-    // Default to index.html if root path is requested
-    let filePath = req.url === '/' ? '/index.html' : req.url;
+    // 1. Strip off any query parameters (e.g., ?v=1.0)
+    const requestUrl = req.url.split('?')[0]; 
+
+    // 2. Route root to index.html
+    let filePath = requestUrl === '/' ? '/index.html' : requestUrl;
     let fullPath = path.join(__dirname, filePath);
 
-    // Basic Content-Type mapping
     const extname = path.extname(fullPath);
     let contentType = 'text/html';
     switch (extname) {
@@ -57,7 +59,7 @@ const webServer = http.createServer((req, res) => {
 });
 
 webServer.listen(3000, '0.0.0.0', () => {
-    console.log('Web server running! Open http://192.168.1.51:3000 on your iPad.');
+    console.log('Web server running! Open http://192.168.1.166:3000 on your iPad.');
 });
 
 // 4. Initialize the Electron Window
@@ -66,7 +68,8 @@ function createWindow () {
     width: 1024,
     height: 768,
     // Critical flags for a non-activating touchscreen UI:
-    focusable: false,       
+    // COMMENT OUT FOR NOW
+    //focusable: false,       
     acceptFirstMouse: true, 
     alwaysOnTop: true,      
     webPreferences: {
@@ -76,7 +79,7 @@ function createWindow () {
   });
 
   // Load your existing builder UI
-  win.loadFile('index.html');
+  win.loadURL('http://localhost:3000'); 
   
   // Show the window without stealing focus from the active DAW
   win.showInactive();
