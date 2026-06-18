@@ -2,40 +2,48 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MIDI Surface</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>DAW Controller</title>
     <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
   </head>
-
   <body>
-    <h1>MIDI Control Surface</h1>
+    <div id="app">
 
-    <button id="mode-toggle-btn">Enter Edit Mode</button>
-    <div id="status">Connecting to bridge...</div>
+      <header id="top-bar">
+        <div id="transport-strip">
+          <button class="transport-btn" data-action="rewind" title="Rewind">◀◀</button>
+          <button class="transport-btn" data-action="play"   title="Play">▶</button>
+          <button class="transport-btn" data-action="stop"   title="Stop">■</button>
+          <button class="transport-btn" data-action="record" title="Record">●</button>
+          <button class="transport-btn" data-action="loop"   title="Loop/Cycle">⟳</button>
+        </div>
+        <div id="macro-strip"></div>
+        <div id="top-controls">
+          <span id="status" class="status connecting">Connecting…</span>
+          <button id="edit-toggle">Edit</button>
+        </div>
+      </header>
 
-    <div id="toolbar">
-      <button id="add-pad-btn">+ Add Pad</button>
-      <button id="add-fader-btn">+ Add Fader</button>
-      <button id="clear-btn" style="background-color: #7b2020;">Clear All</button>
+      <nav id="tab-bar">
+        <!-- instrument tabs injected by app.js -->
+      </nav>
+
+      <main id="workspace">
+        <aside id="fader-bank">
+          <!-- faders injected by app.js -->
+        </aside>
+        <section id="articulation-grid">
+          <div id="art-empty-state">
+            <p>Import a Cubase expression map to get started</p>
+            <button id="import-hint-btn">+ Import Expression Map</button>
+          </div>
+        </section>
+      </main>
+
     </div>
 
-    <div class="pad-container" id="canvas"></div>
-
-    <div id="property-inspector">
-      <h3>Properties</h3>
-      
-      <label>Label Text:
-        <input type="text" id="prop-text" placeholder="e.g. Swells">
-      </label>
-      
-      <label>Color:
-        <input type="color" id="prop-color">
-      </label>
-      
-      <label>MIDI CC:
-        <input type="number" id="prop-cc" min="0" max="127">
-      </label>
+    <div id="drop-overlay" class="hidden">
+      <div id="drop-message">Drop .expressionmap Files Here</div>
     </div>
 
     <script src="app.js" defer></script>

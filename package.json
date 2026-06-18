@@ -1,11 +1,10 @@
 {
   "name": "midi-surface-builder",
-  "version": "1.0.0",
-  "description": "",
+  "version": "2.0.0",
+  "description": "Professional DAW controller for film composers",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron ."
   },
   "keywords": [],
   "author": "",
