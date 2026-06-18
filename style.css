@@ -13,54 +13,132 @@ body {
   height: 100vh;
   overflow: hidden;
   touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
-/* ── Header ── */
+/* ── Header ─────────────────────────────────────────────────────────────────── */
 #header-bar {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: 0 12px;
   height: 48px;
   background: #252525;
   border-bottom: 1px solid #333;
   flex-shrink: 0;
   z-index: 200;
+  gap: 12px;
 }
 
 #app-title {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   color: #fff;
   letter-spacing: 0.5px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
+/* OSC config cluster */
+#osc-config {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.config-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #555;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.config-sep {
+  color: #555;
+  font-size: 13px;
+}
+
+#osc-config input[type="text"],
+#osc-config input[type="number"] {
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  color: #ccc;
+  font-size: 12px;
+  padding: 4px 6px;
+  outline: none;
+}
+
+#osc-config input[type="text"]   { width: 110px; }
+#osc-config input[type="number"] { width: 68px;  }
+
+#osc-config input:focus { border-color: #e67e22; }
+
+#osc-apply-btn {
+  padding: 4px 10px;
+  font-size: 11px;
+  background: #333;
+  color: #aaa;
+  border: 1px solid #4a4a4a;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#osc-apply-btn:hover { background: #444; color: #fff; }
+
+/* Status dots */
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3a3a3a;
+  border: 1px solid #555;
+  flex-shrink: 0;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.dot.active { background: #4caf50; border-color: #4caf50; box-shadow: 0 0 6px #4caf50; }
+.dot.error  { background: #f44336; border-color: #f44336; }
+
+/* Header right controls */
 #header-controls {
   display: flex;
-  flex-direction: row;
-  gap: 12px;
   align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
-#status {
+.hdr-btn {
+  padding: 5px 12px;
   font-size: 12px;
+  background: #333;
+  color: #ccc;
+  border: 1px solid #4a4a4a;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.hdr-btn:hover { background: #444; color: #fff; }
+
+#status {
+  font-size: 11px;
   color: #888;
   padding: 4px 10px;
   background: #1a1a1a;
   border-radius: 12px;
   border: 1px solid #333;
+  white-space: nowrap;
 }
 
-.status-connected {
-  color: #4caf50 !important;
-  border-color: #4caf50 !important;
-}
-
-.status-error {
-  color: #f44336 !important;
-  border-color: #f44336 !important;
-}
+.status-connected { color: #4caf50 !important; border-color: #4caf50 !important; }
+.status-error     { color: #f44336 !important; border-color: #f44336 !important; }
 
 #mode-toggle-btn {
   padding: 7px 16px;
@@ -72,6 +150,7 @@ body {
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap;
 }
 
 #mode-toggle-btn.active {
@@ -80,7 +159,7 @@ body {
   border-color: #e67e22;
 }
 
-/* ── Toolbar ── */
+/* ── Toolbar ─────────────────────────────────────────────────────────────────── */
 #toolbar {
   display: none;
   align-items: center;
@@ -93,9 +172,7 @@ body {
   gap: 0;
 }
 
-body.edit-mode #toolbar {
-  display: flex;
-}
+body.edit-mode #toolbar { display: flex; }
 
 .toolbar-group {
   display: flex;
@@ -105,9 +182,7 @@ body.edit-mode #toolbar {
   border-right: 1px solid #3a3a3a;
 }
 
-.toolbar-group:last-child {
-  border-right: none;
-}
+.toolbar-group:last-child { border-right: none; }
 
 .toolbar-label {
   font-size: 10px;
@@ -131,20 +206,10 @@ body.edit-mode #toolbar {
   transition: background 0.15s;
 }
 
-#toolbar button:hover {
-  background: #484848;
-  color: white;
-}
+#toolbar button:hover { background: #484848; color: white; }
 
-.danger-btn {
-  background: #5a2020 !important;
-  border-color: #7a3030 !important;
-}
-
-.danger-btn:hover {
-  background: #6a2828 !important;
-  color: white !important;
-}
+.danger-btn { background: #5a2020 !important; border-color: #7a3030 !important; color: #e08080 !important; }
+.danger-btn:hover { background: #6a2828 !important; color: white !important; }
 
 .snap-toggle {
   display: flex;
@@ -154,30 +219,28 @@ body.edit-mode #toolbar {
   background: #383838;
   border: 1px solid #4a4a4a;
   border-radius: 4px;
-  cursor: pointer;
   font-size: 12px;
   color: #bbb;
+  cursor: pointer;
 }
 
-.snap-toggle input {
-  accent-color: #e67e22;
-}
+.snap-toggle input { accent-color: #e67e22; }
 
-/* ── Main Area & Canvas ── */
+/* ── Main Area ───────────────────────────────────────────────────────────────── */
 #main-area {
   flex: 1;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
   transition: margin-right 0.3s ease;
 }
 
-body.edit-mode #main-area {
-  margin-right: 280px;
-}
+body.edit-mode #main-area { margin-right: 280px; }
 
+/* ── Canvas ──────────────────────────────────────────────────────────────────── */
 #canvas {
-  width: 100%;
-  height: 100%;
+  flex: 1;
   position: relative;
   overflow: hidden;
 }
@@ -189,11 +252,98 @@ body.edit-mode #canvas {
   background-size: 20px 20px;
 }
 
-/* ── Widgets ── */
+/* Page layers — each fills the canvas absolutely */
+.page-layer {
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+
+.page-layer.active { display: block; }
+
+/* ── Page Tabs Bar ────────────────────────────────────────────────────────────── */
+#page-tabs-bar {
+  display: flex;
+  align-items: stretch;
+  height: 36px;
+  background: #1e1e1e;
+  border-top: 1px solid #333;
+  flex-shrink: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+#page-tabs-bar::-webkit-scrollbar { height: 3px; }
+#page-tabs-bar::-webkit-scrollbar-thumb { background: #444; }
+
+.page-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  font-size: 12px;
+  color: #666;
+  border-right: 1px solid #2a2a2a;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, background 0.15s;
+  position: relative;
+  min-width: 80px;
+  justify-content: center;
+}
+
+.page-tab:hover { color: #ccc; background: #252525; }
+
+.page-tab.active {
+  color: #fff;
+  background: #252525;
+  border-top: 2px solid #e67e22;
+}
+
+.page-tab-close {
+  font-size: 14px;
+  color: #555;
+  line-height: 1;
+  padding: 0 2px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: color 0.1s;
+  flex-shrink: 0;
+}
+
+.page-tab-close:hover { color: #f44336; }
+
+.page-tab-rename {
+  background: none;
+  border: none;
+  border-bottom: 1px solid #e67e22;
+  color: #fff;
+  font-size: 12px;
+  outline: none;
+  width: 80px;
+  padding: 0 2px;
+}
+
+.page-tab-add {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-size: 12px;
+  color: #555;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+
+.page-tab-add:hover { color: #e67e22; }
+
+/* ── Widgets ─────────────────────────────────────────────────────────────────── */
 .widget {
   position: absolute;
   touch-action: none;
   user-select: none;
+  -webkit-user-select: none;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -204,35 +354,10 @@ body.edit-mode #canvas {
   transition: box-shadow 0.1s;
 }
 
-body.edit-mode .widget {
-  cursor: move;
-}
+body.edit-mode .widget { cursor: move; }
 
 .widget.selected {
   box-shadow: 0 0 0 2px #e67e22, 0 0 20px rgba(230,126,34,0.3);
-}
-
-.widget-label {
-  font-size: inherit;
-  color: inherit;
-  text-align: center;
-  padding: 2px 6px;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.widget-cc-tag {
-  font-size: 10px;
-  color: rgba(255,255,255,0.35);
-  position: absolute;
-  bottom: 4px;
-  right: 6px;
-  pointer-events: none;
-  letter-spacing: 0.3px;
-}
-
-body:not(.edit-mode) .widget-pad:active {
-  filter: brightness(1.7);
 }
 
 body.edit-mode .widget::after {
@@ -247,11 +372,30 @@ body.edit-mode .widget::after {
   pointer-events: none;
 }
 
-/* ── Fader ── */
-.widget-fader {
-  padding: 10px 0;
-  gap: 4px;
+.widget-label {
+  font-size: inherit;
+  color: inherit;
+  text-align: center;
+  padding: 2px 6px;
+  pointer-events: none;
+  z-index: 2;
 }
+
+.widget-cc-tag {
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
+  position: absolute;
+  bottom: 4px;
+  right: 6px;
+  pointer-events: none;
+  letter-spacing: 0.3px;
+}
+
+/* Pad */
+body:not(.edit-mode) .widget-pad:active { filter: brightness(1.7); }
+
+/* Fader */
+.widget-fader { padding: 10px 0; gap: 4px; }
 
 .fader-track {
   flex: 1;
@@ -265,13 +409,10 @@ body.edit-mode .widget::after {
 
 .fader-fill {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 0; left: 0; right: 0;
   background: linear-gradient(180deg, #4a9eff, #1a4a88);
   border-radius: 7px;
   pointer-events: none;
-  transition: height 0.05s;
   height: 0%;
 }
 
@@ -285,46 +426,25 @@ body.edit-mode .widget::after {
   border: 1px solid #888;
   border-radius: 4px;
   z-index: 2;
-  cursor: grab;
   bottom: 0%;
 }
 
-/* ── Knob ── */
-.widget-knob {
-  padding: 8px;
-  gap: 2px;
-  cursor: default;
-}
+body:not(.edit-mode) .widget-fader { cursor: ns-resize; }
 
-body:not(.edit-mode) .widget-knob {
-  cursor: ns-resize;
-}
+/* Knob */
+.widget-knob { padding: 8px; gap: 2px; }
+body:not(.edit-mode) .widget-knob { cursor: ns-resize; }
 
-.knob-svg-wrap {
-  width: 75%;
-  max-width: 110px;
-  flex: 1;
-}
+.knob-svg-wrap { width: 75%; max-width: 110px; flex: 1; }
+.knob-svg      { width: 100%; height: 100%; }
 
-.knob-svg {
-  width: 100%;
-  height: 100%;
-}
-
-/* ── XY Pad ── */
-.widget-xy {
-  position: relative;
-  padding: 0;
-}
-
-body:not(.edit-mode) .widget-xy {
-  cursor: crosshair;
-}
+/* XY Pad */
+.widget-xy { position: relative; padding: 0; }
+body:not(.edit-mode) .widget-xy { cursor: crosshair; }
 
 .xy-label {
   position: absolute;
-  top: 6px;
-  left: 8px;
+  top: 6px; left: 8px;
   font-size: 11px;
   z-index: 2;
   color: rgba(255,255,255,0.7);
@@ -333,81 +453,43 @@ body:not(.edit-mode) .widget-xy {
 
 .xy-dot {
   position: absolute;
-  width: 14px;
-  height: 14px;
+  width: 14px; height: 14px;
   background: white;
   border-radius: 50%;
   border: 2px solid rgba(0,0,0,0.4);
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   pointer-events: none;
   box-shadow: 0 0 8px rgba(255,255,255,0.5);
 }
 
-.widget-xy::before {
-  content: '';
+/* XY crosshair lines — use regular child divs, not ::after (to avoid conflict with resize corner) */
+.xy-h-line, .xy-v-line {
   position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
   background: rgba(255,255,255,0.1);
   pointer-events: none;
 }
 
-.widget-xy::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: rgba(255,255,255,0.1);
-  pointer-events: none;
-}
+.xy-h-line { top: 50%; left: 0; right: 0; height: 1px; }
+.xy-v-line { left: 50%; top: 0; bottom: 0; width: 1px; }
 
-/* XY after override for resize corner - XY pad uses pseudo-elements for crosshairs */
-body.edit-mode .widget-xy::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: rgba(255,255,255,0.1);
-  pointer-events: none;
-  border-right: none;
-  border-bottom: none;
-}
-
-/* ── Toggle ── */
-.widget-toggle {
-  gap: 4px;
-}
+/* Toggle */
+.widget-toggle { gap: 4px; }
 
 .toggle-state {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 2px;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.3);
   transition: color 0.2s;
 }
 
-.widget-toggle.toggle-on .toggle-state {
-  color: #4caf50;
-}
+.widget-toggle.toggle-on .toggle-state { color: #4caf50; }
+body:not(.edit-mode) .widget-toggle.toggle-on { filter: brightness(1.4); }
 
-body:not(.edit-mode) .widget-toggle.toggle-on {
-  filter: brightness(1.4);
-}
+/* Label widget */
+.label-only { text-align: center; width: 100%; padding: 4px 8px; }
 
-/* ── Label Widget ── */
-.label-only {
-  text-align: center;
-  width: 100%;
-  padding: 4px 8px;
-}
-
-/* ── Property Inspector ── */
+/* ── Property Inspector ───────────────────────────────────────────────────────── */
 #property-inspector {
   position: fixed;
   right: -290px;
@@ -423,9 +505,7 @@ body:not(.edit-mode) .widget-toggle.toggle-on {
   overflow: hidden;
 }
 
-body.edit-mode #property-inspector {
-  right: 0;
-}
+body.edit-mode #property-inspector { right: 0; }
 
 #inspector-header {
   padding: 14px 16px 10px;
@@ -473,14 +553,8 @@ body.edit-mode #property-inspector {
   transition: all 0.15s;
 }
 
-.tab-btn.active {
-  color: #e67e22;
-  border-bottom-color: #e67e22;
-}
-
-.tab-btn:hover:not(.active) {
-  color: #ccc;
-}
+.tab-btn.active { color: #e67e22; border-bottom-color: #e67e22; }
+.tab-btn:hover:not(.active) { color: #ccc; }
 
 .tab-panel {
   display: none;
@@ -491,9 +565,7 @@ body.edit-mode #property-inspector {
   flex: 1;
 }
 
-.tab-panel.active {
-  display: flex;
-}
+.tab-panel.active { display: flex; }
 
 #property-inspector label {
   display: flex;
@@ -506,9 +578,7 @@ body.edit-mode #property-inspector {
   transition: background 0.1s;
 }
 
-#property-inspector label:hover {
-  background: #2e2e2e;
-}
+#property-inspector label:hover { background: #2e2e2e; }
 
 .checkbox-label {
   flex-direction: row !important;
@@ -527,12 +597,12 @@ body.edit-mode #property-inspector {
   font-size: 13px;
   width: 100%;
   outline: none;
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 #property-inspector input:focus,
-#property-inspector select:focus {
-  border-color: #e67e22;
-}
+#property-inspector select:focus { border-color: #e67e22; }
 
 #property-inspector input[type="color"] {
   width: 100%;
@@ -556,10 +626,7 @@ body.edit-mode #property-inspector {
   gap: 8px;
 }
 
-.range-row input[type="range"] {
-  flex: 1;
-  accent-color: #e67e22;
-}
+.range-row input[type="range"] { flex: 1; accent-color: #e67e22; }
 
 .range-row span {
   font-size: 11px;
@@ -580,6 +647,11 @@ body.edit-mode #property-inspector {
   display: inline-block;
 }
 
-#xy-cc-row {
-  padding: 0 0px;
+.inspector-divider {
+  height: 1px;
+  background: #333;
+  margin: 4px 8px;
 }
+
+#xy-cc-row,
+#xy-osc-y-row { padding: 0; }
