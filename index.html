@@ -1,43 +1,184 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MIDI Surface</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
-  </head>
-
-  <body>
-    <h1>MIDI Control Surface</h1>
-
-    <button id="mode-toggle-btn">Enter Edit Mode</button>
-    <div id="status">Connecting to bridge...</div>
-
-    <div id="toolbar">
-      <button id="add-pad-btn">+ Add Pad</button>
-      <button id="add-fader-btn">+ Add Fader</button>
-      <button id="clear-btn" style="background-color: #7b2020;">Clear All</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MIDI Surface Builder</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+</head>
+<body>
+  <div id="header-bar">
+    <span id="app-title">MIDI Surface Builder</span>
+    <div id="header-controls">
+      <span id="status">Connecting...</span>
+      <button id="mode-toggle-btn">Edit Mode</button>
     </div>
+  </div>
 
-    <div class="pad-container" id="canvas"></div>
-
-    <div id="property-inspector">
-      <h3>Properties</h3>
-      
-      <label>Label Text:
-        <input type="text" id="prop-text" placeholder="e.g. Swells">
-      </label>
-      
-      <label>Color:
-        <input type="color" id="prop-color">
-      </label>
-      
-      <label>MIDI CC:
-        <input type="number" id="prop-cc" min="0" max="127">
-      </label>
+  <div id="toolbar">
+    <div class="toolbar-group">
+      <span class="toolbar-label">Add</span>
+      <button id="add-pad-btn">Pad</button>
+      <button id="add-fader-btn">Fader</button>
+      <button id="add-knob-btn">Knob</button>
+      <button id="add-xy-btn">XY Pad</button>
+      <button id="add-toggle-btn">Toggle</button>
+      <button id="add-label-btn">Label</button>
     </div>
+    <div class="toolbar-group">
+      <span class="toolbar-label">Edit</span>
+      <button id="duplicate-btn">Duplicate</button>
+      <button id="delete-btn">Delete</button>
+    </div>
+    <div class="toolbar-group">
+      <span class="toolbar-label">Layer</span>
+      <button id="bring-forward-btn">↑ Forward</button>
+      <button id="send-back-btn">↓ Back</button>
+    </div>
+    <div class="toolbar-group">
+      <span class="toolbar-label">Align</span>
+      <button id="align-left-btn">← Left</button>
+      <button id="align-center-btn">↔ Center</button>
+      <button id="align-right-btn">→ Right</button>
+      <button id="align-top-btn">↑ Top</button>
+      <button id="align-middle-btn">↕ Mid</button>
+      <button id="align-bottom-btn">↓ Bottom</button>
+    </div>
+    <div class="toolbar-group">
+      <span class="toolbar-label">Canvas</span>
+      <label class="snap-toggle">
+        <input type="checkbox" id="snap-toggle" />
+        Snap
+      </label>
+      <button id="clear-btn" class="danger-btn">Clear All</button>
+    </div>
+  </div>
 
-    <script src="app.js" defer></script>
-  </body>
+  <div id="main-area">
+    <div id="canvas"></div>
+  </div>
+
+  <div id="property-inspector">
+    <div id="inspector-header">
+      <h3 id="inspector-title">Properties</h3>
+      <span id="no-selection-msg">Select a widget to edit</span>
+    </div>
+    <div id="inspector-panels">
+      <div id="inspector-tabs">
+        <button class="tab-btn active" data-tab="style">Style</button>
+        <button class="tab-btn" data-tab="midi">MIDI</button>
+        <button class="tab-btn" data-tab="layout">Layout</button>
+      </div>
+      <div id="tab-style" class="tab-panel active">
+        <label>
+          Label Text
+          <input type="text" id="prop-text" />
+        </label>
+        <label>
+          Font Size
+          <input type="number" id="prop-font-size" min="6" max="72" value="14" />
+        </label>
+        <label>
+          Label Color
+          <input type="color" id="prop-label-color" value="#ffffff" />
+        </label>
+        <label>
+          Background
+          <input type="color" id="prop-color" value="#444444" />
+        </label>
+        <label>
+          Opacity
+          <div class="range-row">
+            <input type="range" id="prop-opacity" min="0" max="100" value="100" />
+            <span id="prop-opacity-val">100%</span>
+          </div>
+        </label>
+        <label>
+          Border Color
+          <input type="color" id="prop-border-color" value="#666666" />
+        </label>
+        <label>
+          Border Width
+          <div class="range-row">
+            <input type="range" id="prop-border-width" min="0" max="10" value="2" />
+            <span id="prop-border-width-val">2px</span>
+          </div>
+        </label>
+        <label>
+          Border Radius
+          <div class="range-row">
+            <input type="range" id="prop-border-radius" min="0" max="75" value="12" />
+            <span id="prop-border-radius-val">12px</span>
+          </div>
+        </label>
+        <label class="checkbox-label">
+          Show Label
+          <input type="checkbox" id="prop-show-label" checked />
+        </label>
+      </div>
+      <div id="tab-midi" class="tab-panel">
+        <div id="widget-type-badge"></div>
+        <label>
+          MIDI Channel
+          <select id="prop-channel"></select>
+        </label>
+        <label>
+          CC Number
+          <input type="number" id="prop-cc" min="0" max="127" value="1" />
+        </label>
+        <div id="xy-cc-row" style="display:none;">
+          <label>
+            CC Y Axis
+            <input type="number" id="prop-cc-y" min="0" max="127" value="15" />
+          </label>
+        </div>
+        <label>
+          Value Min
+          <input type="number" id="prop-val-min" min="0" max="127" value="0" />
+        </label>
+        <label>
+          Value Max
+          <input type="number" id="prop-val-max" min="0" max="127" value="127" />
+        </label>
+        <label>
+          Message Type
+          <select id="prop-msg-type">
+            <option value="cc">CC</option>
+            <option value="note">Note</option>
+            <option value="pitchbend">Pitch Bend</option>
+          </select>
+        </label>
+      </div>
+      <div id="tab-layout" class="tab-panel">
+        <label>
+          X Position
+          <input type="number" id="prop-x" value="0" />
+        </label>
+        <label>
+          Y Position
+          <input type="number" id="prop-y" value="0" />
+        </label>
+        <label>
+          Width
+          <input type="number" id="prop-w" value="150" />
+        </label>
+        <label>
+          Height
+          <input type="number" id="prop-h" value="150" />
+        </label>
+        <label class="checkbox-label">
+          Lock Position
+          <input type="checkbox" id="prop-lock" />
+        </label>
+        <label>
+          Z-Index
+          <input type="number" id="prop-z" min="0" max="999" value="1" />
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
 </html>
