@@ -72,6 +72,13 @@ wss.on('connection', (ws) => {
       } else if (data.type === 'osc') {
         sendOSCPacket(data.address, data.value);
 
+      } else if (data.type === 'sync_layout') {
+        // Broadcast layout to all OTHER clients so windows stay in sync
+        const reply = JSON.stringify(data);
+        wss.clients.forEach(c => {
+          if (c !== ws && c.readyState === WebSocket.OPEN) c.send(reply);
+        });
+
       } else if (data.type === 'config_osc') {
         oscTarget = {
           ip:      data.ip   || '127.0.0.1',

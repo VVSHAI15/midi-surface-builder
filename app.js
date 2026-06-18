@@ -20,7 +20,8 @@ let socket     = null;
 
 function connectWebSocket() {
   try {
-    socket = new WebSocket('ws://192.168.1.166:8080');
+    const wsHost = window.location.hostname || '127.0.0.1';
+    socket = new WebSocket(`ws://${wsHost}:8080`);
 
     socket.addEventListener('open', () => {
       statusEl.textContent = 'MIDI Connected';
@@ -38,7 +39,7 @@ function connectWebSocket() {
       statusEl.className   = 'status-error';
     });
 
-    // Listen for server-pushed status (e.g. OSC confirmed)
+    // Listen for server-pushed messages
     socket.addEventListener('message', (e) => {
       try {
         const data = JSON.parse(e.data);
@@ -47,6 +48,9 @@ function connectWebSocket() {
           if (dot) dot.classList.add('active');
           document.getElementById('osc-ip').value   = data.ip;
           document.getElementById('osc-port').value = data.port;
+        } else if (data.type === 'sync_layout') {
+          // Another window pushed a layout change — apply it silently
+          loadLayout(data.layout);
         }
       } catch (_) {}
     });
@@ -232,6 +236,7 @@ toggleBtn.addEventListener('click', () => {
 });
 
 // ── Save / Load ───────────────────────────────────────────────────────────────
+document.getElementById('sync-btn').addEventListener('click', syncLayout);
 document.getElementById('save-btn').addEventListener('click', saveLayout);
 document.getElementById('load-btn').addEventListener('click', () => {
   document.getElementById('load-file-input').click();
@@ -265,6 +270,11 @@ function saveLayout() {
     currentPage: currentPageIndex,
   };
 
+  // Broadcast to other connected windows
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    socket.send(JSON.stringify({ type: 'sync_layout', layout: data }));
+  }
+
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
@@ -274,6 +284,24 @@ function saveLayout() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+function syncLayout() {
+  const data = {
+    version: 2,
+    savedAt: new Date().toISOString(),
+    pages: pages.map((page) => {
+      const layer   = document.getElementById(page.id);
+      const widgets = layer
+        ? Array.from(layer.querySelectorAll('.widget')).map(serializeWidget)
+        : [];
+      return { id: page.id, name: page.name, widgets };
+    }),
+    currentPage: currentPageIndex,
+  };
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    socket.send(JSON.stringify({ type: 'sync_layout', layout: data }));
+  }
 }
 
 function serializeWidget(el) {
