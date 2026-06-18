@@ -55,6 +55,7 @@ wss.on('connection', (ws) => {
 
       if (data.type === 'cc') {
         midiOut.send('cc', { channel: ch, controller: ctrl, value: val });
+        console.log(`CC  ch:${ch + 1}  ctrl:${ctrl}  val:${val}`);
 
       } else if (data.type === 'note') {
         if (val > 0) {

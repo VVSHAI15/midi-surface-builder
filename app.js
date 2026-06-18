@@ -660,46 +660,32 @@ function wireWidgetEvents(el, type) {
     }
 
     case 'fader': {
-      el.addEventListener('mousedown', (e) => {
+      // pointerdown covers both mouse and touch, and fires before interact.js
+      // can suppress mousedown via its own pointerdown handler
+      el.addEventListener('pointerdown', (e) => {
         if (isEditMode) return;
         e.preventDefault();
         activeFaderDrag = { el };
       });
-      el.addEventListener('touchstart', (e) => {
-        if (isEditMode) return;
-        e.preventDefault();
-        activeFaderDrag = { el };
-      }, { passive: false });
       break;
     }
 
     case 'knob': {
-      el.addEventListener('mousedown', (e) => {
+      el.addEventListener('pointerdown', (e) => {
         if (isEditMode) return;
         e.preventDefault();
         activeKnobDrag = { el, startY: e.clientY, startVal: parseFloat(el.dataset.value) };
       });
-      el.addEventListener('touchstart', (e) => {
-        if (isEditMode) return;
-        e.preventDefault();
-        activeKnobDrag = { el, startY: e.touches[0].clientY, startVal: parseFloat(el.dataset.value) };
-      }, { passive: false });
       break;
     }
 
     case 'xy': {
-      el.addEventListener('mousedown', (e) => {
+      el.addEventListener('pointerdown', (e) => {
         if (isEditMode) return;
         e.preventDefault();
         activeXYDrag = { el };
         updateXY(e.clientX, e.clientY, el);
       });
-      el.addEventListener('touchstart', (e) => {
-        if (isEditMode) return;
-        e.preventDefault();
-        activeXYDrag = { el };
-        updateXY(e.touches[0].clientX, e.touches[0].clientY, el);
-      }, { passive: false });
       break;
     }
 
@@ -745,7 +731,7 @@ function handlePointerMove(clientX, clientY) {
   if (activeFaderDrag) {
     const { el }  = activeFaderDrag;
     const track   = el.querySelector('.fader-track');
-    if (!track) return;
+    if (track) {
     const rect    = track.getBoundingClientRect();
     const py      = Math.max(0, Math.min(1, 1 - (clientY - rect.top) / rect.height));
     const min     = parseFloat(el.dataset.valMin);
@@ -758,6 +744,7 @@ function handlePointerMove(clientX, clientY) {
     if (thumb) thumb.style.bottom = `${py * 100}%`;
     sendMidi(el.dataset.msgType, el.dataset.channel, el.dataset.cc, val);
     sendOSC(el.dataset.oscAddress, val);
+    } // end if (track)
   }
 
   if (activeKnobDrag) {
@@ -783,9 +770,17 @@ function handlePointerEnd() {
   activeXYDrag    = null;
 }
 
-document.addEventListener('mousemove', (e) => handlePointerMove(e.clientX, e.clientY));
-document.addEventListener('mouseup',   handlePointerEnd);
-
+document.addEventListener('mousemove',   (e) => handlePointerMove(e.clientX, e.clientY));
+document.addEventListener('mouseup',     handlePointerEnd);
+// pointermove covers mouse + stylus + touch from pointerdown-initiated drags
+document.addEventListener('pointermove', (e) => {
+  if (activeFaderDrag || activeKnobDrag || activeXYDrag) {
+    e.preventDefault();
+    handlePointerMove(e.clientX, e.clientY);
+  }
+}, { passive: false });
+document.addEventListener('pointerup',   handlePointerEnd);
+// touchmove/touchend kept for any fallback paths
 document.addEventListener('touchmove', (e) => {
   if (activeFaderDrag || activeKnobDrag || activeXYDrag) {
     e.preventDefault();
@@ -793,7 +788,6 @@ document.addEventListener('touchmove', (e) => {
     handlePointerMove(t.clientX, t.clientY);
   }
 }, { passive: false });
-
 document.addEventListener('touchend', handlePointerEnd, { passive: true });
 
 // ── Interact.js ───────────────────────────────────────────────────────────────
